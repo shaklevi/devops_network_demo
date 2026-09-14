@@ -31,7 +31,7 @@ pipeline {
                             shaharcpp/docker-network-demo-db:latest
                         
                         # 4. Run API Container
-                        docker run -d --name docker-network-demo-api \
+                        docker run -d --name api \
                             --network backend-net \
                             -e DB_HOST=docker-network-demo-db \
                             -e DB_USER=demo \
@@ -39,7 +39,7 @@ pipeline {
                             shaharcpp/docker-network-demo-api:latest
                         
                         # 5. Connect API to Frontend network
-                        docker network connect frontend-net docker-network-demo-api
+                        docker network connect frontend-net api
                         
                         # 6. Run Frontend Container
                         docker run -d --name docker-network-demo-frontend \
