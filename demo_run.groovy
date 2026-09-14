@@ -8,6 +8,7 @@ pipeline {
                 docker {
                     image 'docker:latest'
                     reuseNode true
+                    //getent group docker | cut -d: -f3
                     args '-u 1000:1000 --group-add 984 -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
