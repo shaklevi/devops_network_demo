@@ -3,13 +3,27 @@ pipeline {
         label 'test1' // Allocates the slave1 node first
     }
     stages {
+        stage('Get Docker Group ID') {
+            steps {
+                script {
+                    // Execute the bash command and capture the output
+                    env.DOCKER_GID = sh(
+                        script: 'getent group docker | cut -d: -f3', 
+                        returnStdout: true
+                    ).trim()
+                }
+                
+                // You can now use the environment variable in subsequent steps
+                echo "The captured Docker GID is: ${env.DOCKER_GID}"
+            }
+        }
         stage('Run Docker Images') {
             agent {
                 docker {
                     image 'docker:latest'
                     reuseNode true
                     //getent group docker | cut -d: -f3
-                    args '-u 1000:1000 --group-add 984 -v /var/run/docker.sock:/var/run/docker.sock'
+                    args '-u 1000:1000 --group-add ${env.DOCKER_GID} -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
